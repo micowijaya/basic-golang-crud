@@ -1,0 +1,134 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A Testing Swagger for My Project",
+        "title": "Basic Golang CRUD",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/books": {
+            "get": {
+                "description": "Return All books Data",
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get All Books",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.book"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/books/{id}": {
+            "get": {
+                "description": "Return book Data",
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Get Book by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "search by id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.book"
+                        }
+                    }
+                }
+            }
+        },
+        "/checkout": {
+            "patch": {
+                "description": "Checkout book Data",
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Checkout Book",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id for checkout",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.book"
+                        }
+                    }
+                }
+            }
+        },
+        "/return": {
+            "patch": {
+                "description": "Return book Data",
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Return Book",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id for checkout",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.book"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.book": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "type": "string",
+                    "example": "Febs"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "1"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "title": {
+                    "type": "string",
+                    "example": "Feb's Tutor"
+                }
+            }
+        }
+    }
+}

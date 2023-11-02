@@ -1,0 +1,89 @@
+basePath: /
+definitions:
+  main.book:
+    properties:
+      author:
+        example: Febs
+        type: string
+      id:
+        example: "1"
+        type: string
+      quantity:
+        example: 10
+        type: integer
+      title:
+        example: Feb's Tutor
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: A Testing Swagger for My Project
+  title: Basic Golang CRUD
+  version: "1.0"
+paths:
+  /books:
+    get:
+      description: Return All books Data
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.book'
+            type: array
+      summary: Get All Books
+      tags:
+      - Books
+  /books/{id}:
+    get:
+      description: Return book Data
+      parameters:
+      - description: search by id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.book'
+      summary: Get Book by ID
+      tags:
+      - Books
+  /checkout:
+    patch:
+      description: Checkout book Data
+      parameters:
+      - description: id for checkout
+        in: query
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.book'
+      summary: Checkout Book
+      tags:
+      - Books
+  /return:
+    patch:
+      description: Return book Data
+      parameters:
+      - description: id for checkout
+        in: query
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.book'
+      summary: Return Book
+      tags:
+      - Books
+swagger: "2.0"
