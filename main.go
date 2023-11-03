@@ -12,6 +12,10 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	swaggerFiles "github.com/swaggo/files"
+
+	"gorm.io/gorm"
+
+	"gorm.io/driver/postgres"
 )
 
 // @title 		Basic Golang CRUD
@@ -141,7 +145,18 @@ func createBook(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, newBook)
 }
 
+var PG_CONN = "postgresql://yomi:yomi123@localhost:5432/main"
+var crudDB *gorm.DB
+
 func main() {
+	db, err := gorm.Open(postgres.Open(PG_CONN), &gorm.Config{})
+
+	if err != nil {
+		return
+	}
+
+	crudDB = db
+
 	router := gin.Default()
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.GET("/books/:id", bookById)
