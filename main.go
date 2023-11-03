@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "golang/crud-basic/docs"
+
 	"golang/crud-basic/migrate"
 
 	"golang/crud-basic/model"
@@ -26,11 +27,11 @@ import (
 // @host 		localhost:8080
 // @BasePath	/
 
-var books = []model.Book{
-	{ID: "1", Title: "In Search of Lost Time", Author: "Marcel Proust", Quantity: 2},
-	{ID: "2", Title: "The Great Gatsby", Author: "F. Scott Fitzgerald", Quantity: 5},
-	{ID: "3", Title: "War and Peace", Author: "Leo Tolstoy", Quantity: 6},
-}
+// var books = []model.Book{
+// 	{ID: "1", Title: "In Search of Lost Time", Author: "Marcel Proust", Quantity: 2},
+// 	{ID: "2", Title: "The Great Gatsby", Author: "F. Scott Fitzgerald", Quantity: 5},
+// 	{ID: "3", Title: "War and Peace", Author: "Leo Tolstoy", Quantity: 6},
+// }
 
 // GetBooks			godoc
 // @Summary			Get All Books
@@ -39,6 +40,8 @@ var books = []model.Book{
 // @Success			200 {object} []book
 // @Router			/books [get]
 func getBooks(c *gin.Context) {
+	var books []model.Book
+	initial.CrudDB.Find(&books)
 	c.IndentedJSON(http.StatusOK, books)
 }
 
@@ -89,6 +92,9 @@ func checkoutBook(c *gin.Context) {
 	}
 
 	book.Quantity -= 1
+
+	initial.CrudDB.Model(&book).Update("quantity", book.Quantity)
+
 	c.IndentedJSON(http.StatusOK, book)
 }
 
@@ -115,17 +121,22 @@ func returnBook(c *gin.Context) {
 	}
 
 	book.Quantity += 1
+
+	initial.CrudDB.Model(&book).Update("quantity", book.Quantity)
+
 	c.IndentedJSON(http.StatusOK, book)
 }
 
 func getBookById(id string) (*model.Book, error) {
-	for i, b := range books {
-		if b.ID == id {
-			return &books[i], nil
-		}
+	var book model.Book
+
+	result := initial.CrudDB.Where("id = ?", id).First(&book)
+
+	if result.Error != nil {
+		return nil, errors.New("book not found")
 	}
 
-	return nil, errors.New("book not found")
+	return &book, nil
 }
 
 func createBook(c *gin.Context) {
@@ -135,7 +146,7 @@ func createBook(c *gin.Context) {
 		return
 	}
 
-	books = append(books, newBook)
+	initial.CrudDB.Create(newBook)
 	c.IndentedJSON(http.StatusCreated, newBook)
 }
 
