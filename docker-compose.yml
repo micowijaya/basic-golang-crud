@@ -21,3 +21,16 @@ services:
         reservations:
           cpus: "0.25"
           memory: 256M
+
+  pgadmin:
+    image: dpage/pgadmin4:7.7
+    container_name: pgadmin
+    restart: unless-stopped
+    ports:
+      - 80:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: yomi@yomi.com
+      PGADMIN_DEFAULT_PASSWORD: yomi123
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin
+    user: root
