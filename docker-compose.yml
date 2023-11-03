@@ -1,6 +1,15 @@
 version: "3.9"
 
 services:
+  basic-crud:
+    image: basic-crud
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    links:
+      - postgres
   postgres:
     image: postgres:alpine3.18
     container_name: postgres
