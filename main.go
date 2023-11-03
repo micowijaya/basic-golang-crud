@@ -2,6 +2,11 @@ package main
 
 import (
 	_ "golang/crud-basic/docs"
+	"golang/crud-basic/migrate"
+
+	"golang/crud-basic/model"
+
+	"golang/crud-basic/initial"
 
 	"net/http"
 
@@ -12,10 +17,6 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	swaggerFiles "github.com/swaggo/files"
-
-	"gorm.io/gorm"
-
-	"gorm.io/driver/postgres"
 )
 
 // @title 		Basic Golang CRUD
@@ -25,14 +26,7 @@ import (
 // @host 		localhost:8080
 // @BasePath	/
 
-type book struct {
-	ID       string `json:"id" example:"1"`
-	Title    string `json:"title" example:"Feb's Tutor"`
-	Author   string `json:"author" example:"Febs"`
-	Quantity int    `json:"quantity" example:"10"`
-}
-
-var books = []book{
+var books = []model.Book{
 	{ID: "1", Title: "In Search of Lost Time", Author: "Marcel Proust", Quantity: 2},
 	{ID: "2", Title: "The Great Gatsby", Author: "F. Scott Fitzgerald", Quantity: 5},
 	{ID: "3", Title: "War and Peace", Author: "Leo Tolstoy", Quantity: 6},
@@ -124,7 +118,7 @@ func returnBook(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, book)
 }
 
-func getBookById(id string) (*book, error) {
+func getBookById(id string) (*model.Book, error) {
 	for i, b := range books {
 		if b.ID == id {
 			return &books[i], nil
@@ -135,7 +129,7 @@ func getBookById(id string) (*book, error) {
 }
 
 func createBook(c *gin.Context) {
-	var newBook book
+	var newBook model.Book
 
 	if err := c.BindJSON(&newBook); err != nil {
 		return
@@ -145,18 +139,9 @@ func createBook(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, newBook)
 }
 
-var PG_CONN = "postgresql://yomi:yomi123@localhost:5432/main"
-var crudDB *gorm.DB
-
 func main() {
-	db, err := gorm.Open(postgres.Open(PG_CONN), &gorm.Config{})
-
-	if err != nil {
-		return
-	}
-
-	crudDB = db
-
+	initial.ConnectDB()
+	migrate.Migrate()
 	router := gin.Default()
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.GET("/books/:id", bookById)
