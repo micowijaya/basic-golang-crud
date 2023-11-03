@@ -2,10 +2,7 @@ version: "3.9"
 
 services:
   basic-crud:
-    image: basic-crud
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/micowijaya/basic-golang-crud:1.0.0
     ports:
       - 8080:8080
     links:
